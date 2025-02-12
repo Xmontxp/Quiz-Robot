@@ -1,0 +1,90 @@
+*** Settings ***
+Library                    SeleniumLibrary
+Suite Setup                Open Browser  http://automationexercise.com  Chrome
+
+
+*** Variables ***
+${EMAIL}        Amoon@gmail.com   
+${PASSWORD}     12345678
+${CARD_NAME}    Test User
+${CARD_NUMBER}  4111111111111111
+${CARD_CVC}     123
+${CARD_EXPIRY}  12
+${YYYY}    2222
+
+*** Keywords ***
+
+CLICK SIGNIN
+    Click Link   //a[contains(text(),'Signup / Login')]
+
+INPUT EMAIL
+    [Arguments]    ${EMAIL}
+    Input Text    //input[@name='email']    ${EMAIL}
+
+INPUT PASSWORD
+    [Arguments]    ${PASSWORD}
+    Input Text    //input[@name='password']    ${PASSWORD}
+
+CLICK BUTTON LOGIN
+    Click Button    //button[contains(text(),'Login')]
+    Wait Until Page Contains    Logged in as    timeout=10s
+
+ADD PRODUCTS TO CART
+    Click Element    //a[contains(text(),'Products')]
+    Click Element    (//a[contains(text(),'Add to cart')])[1]
+    Click Element    //a[contains(text(),'Cart')]
+    Wait Until Page Contains    Shopping Cart    timeout=10s
+
+OPEN CART
+    Click Element    //a[contains(text(),'Cart')]
+    Wait Until Page Contains    Shopping Cart    timeout=10s
+
+VERIFY CART PAGE
+    Wait Until Page Contains    Shopping Cart    timeout=10s
+
+PROCEED TO CHECKOUT
+    Click Link    //*[@id="do_action"]/div[1]/div/div/a
+
+VERIFY ADDRESS AND ORDER DETAILS
+    Wait Until Page Contains    Checkout    timeout=10s
+
+ENTER ORDER DESCRIPTION
+    Input Text    //textarea[@name='message']    Test order
+    Click Link    //*[@id="cart_items"]/div/div[7]/a
+
+ENTER PAYMENT DETAILS
+    Input Text    //input[@name='name_on_card']    ${CARD_NAME}
+    Input Text    //input[@name='card_number']    ${CARD_NUMBER}
+    Input Text    //input[@name='cvc']    ${CARD_CVC}
+    Input Text    //input[@name='expiry_month']    ${CARD_EXPIRY}
+    Input Text    //input[@name='expiry_year']    ${YYYY}
+
+CONFIRM ORDER
+    Wait Until Page Contains    Your order has been placed successfully!    timeout=10s
+    Click Button    //button[contains(text(),'Pay and Confirm Order')]
+
+VERIFY ORDER SUCCESS
+    Click Link    //*[@id="form"]/div/div/div/div/a
+
+DELETE ACCOUNT
+    Click Link    //*[@id="header"]/div/div/div/div[2]/div/ul/li[5]/a
+    Wait Until Element Is Visible    //div[contains(text(),'ACCOUNT DELETED!')]    timeout=10s
+    Click Element    //a[contains(text(),'Continue')]
+
+*** Test Cases ***
+Test01
+    Set Window Size    1920    1080
+    CLICK SIGNIN
+    INPUT EMAIL    ${EMAIL}
+    INPUT PASSWORD    ${PASSWORD}
+    CLICK BUTTON LOGIN
+    ADD PRODUCTS TO CART
+    OPEN CART
+    VERIFY CART PAGE
+    PROCEED TO CHECKOUT
+    VERIFY ADDRESS AND ORDER DETAILS
+    ENTER ORDER DESCRIPTION
+    ENTER PAYMENT DETAILS
+    CONFIRM ORDER
+    VERIFY ORDER SUCCESS
+    DELETE ACCOUNT
