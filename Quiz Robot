@@ -68,8 +68,8 @@ VERIFY ORDER SUCCESS
 
 DELETE ACCOUNT
     Click Link    //*[@id="header"]/div/div/div/div[2]/div/ul/li[5]/a
-    Wait Until Element Is Visible    //div[contains(text(),'ACCOUNT DELETED!')]    timeout=10s
-    Click Element    //a[contains(text(),'Continue')]
+    Wait Until Page Contains    Account Deleted!    timeout=10s
+    Click Link    //*[@id="form"]/div/div/div/div/a
 
 *** Test Cases ***
 Test01
